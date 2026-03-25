@@ -18,17 +18,22 @@ function jsonSafe(obj) {
   return JSON.stringify(obj ?? {});
 }
 
-(async function main() {
-  const { db } = await openDb();
-  try {
-    db.run('ALTER TABLE sessions ADD COLUMN selected_domain TEXT');
-  } catch (error) {
-    // ignore if column already exists
-  }
+let db;
 
   const app = express();
   app.use(cors());
   app.use(express.json({ limit: '2mb' }));
+
+  app.use(async (req, res, next) => {
+    if (!db) {
+      const opened = await openDb();
+      db = opened.db;
+      try {
+        db.run('ALTER TABLE sessions ADD COLUMN selected_domain TEXT');
+      } catch (error) {}
+    }
+    next();
+  });
 
   // Serve the frontend
   const rootDir = path.join(__dirname, '..');
@@ -135,6 +140,43 @@ function jsonSafe(obj) {
     res.json({ id, created_at });
   });
 
+  app.get('/api/onboarding/:sessionId', (req, res) => {
+    const sessionId = String(req.params.sessionId || '');
+    if (!sessionId) return res.status(400).json({ error: 'session_id required' });
+
+    const rows = queryAll(db, 'SELECT * FROM onboarding_profiles WHERE session_id = ? LIMIT 1', [sessionId]);
+    if (!rows.length) return res.status(404).json({ error: 'not found' });
+    res.json({ ok: true, onboarding: rows[0] });
+  });
+
+  app.post('/api/onboarding', (req, res) => {
+    const session_id = String(req.body?.session_id ?? '');
+    if (!session_id) return res.status(400).json({ error: 'session_id required' });
+
+    const dream_role = String(req.body?.dream_role ?? '');
+    const current_field = String(req.body?.current_field ?? '');
+    const level = String(req.body?.level ?? '');
+    const time_commitment = String(req.body?.time_commitment ?? '');
+    const is_onboarded = req.body?.is_onboarded ? 1 : 0;
+
+    const now = nowIso();
+    const existing = queryAll(db, 'SELECT session_id FROM onboarding_profiles WHERE session_id = ? LIMIT 1', [session_id]);
+
+    if (existing.length) {
+      db.run(
+        'UPDATE onboarding_profiles SET dream_role = ?, current_field = ?, level = ?, time_commitment = ?, is_onboarded = ?, updated_at = ? WHERE session_id = ?',
+        [dream_role, current_field, level, time_commitment, is_onboarded, now, session_id]
+      );
+    } else {
+      db.run(
+        'INSERT INTO onboarding_profiles (session_id, dream_role, current_field, level, time_commitment, is_onboarded, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [session_id, dream_role, current_field, level, time_commitment, is_onboarded, now, now]
+      );
+    }
+
+    res.json({ ok: true, session_id, is_onboarded });
+  });
+
   app.get('/api/sessions/:id', (req, res) => {
     const id = String(req.params.id);
     const sessions = queryAll(db, 'SELECT * FROM sessions WHERE id = ? LIMIT 1', [id]);
@@ -172,15 +214,13 @@ function jsonSafe(obj) {
   });
 
   app.get('/', (_req, res) => {
-    res.sendFile(path.join(rootDir, 'indexx.html'));
+    res.sendFile(path.join(rootDir, 'index.html'));
   });
 
-  app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`SkillShift server running at http://localhost:${PORT}`);
-  });
-})().catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error(err);
-  process.exit(1);
-});
+  if (require.main === module) {
+    app.listen(PORT, () => {
+      console.log(`SkillShift server running at http://localhost:${PORT}`);
+    });
+  }
+
+  module.exports = app;

@@ -16,5 +16,16 @@ CREATE TABLE IF NOT EXISTS events (
   FOREIGN KEY(session_id) REFERENCES sessions(id)
 );
 
+CREATE TABLE IF NOT EXISTS onboarding_profiles (
+  session_id TEXT PRIMARY KEY,
+  dream_role TEXT,
+  current_field TEXT,
+  level TEXT,
+  time_commitment TEXT,
+  is_onboarded INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_events_session_id_created_at
 ON events(session_id, created_at);

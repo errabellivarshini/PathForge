@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Path</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f9fc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #3b82f6;
+            --accent-soft: #e0ecff;
+            --border: #e2e8f0;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            margin: 0;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 12px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            box-shadow: 0 8px 18px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 22px rgba(59, 130, 246, 0.28);
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: var(--accent-soft);
+            color: #1d4ed8;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: #cfe1ff;
+            box-shadow: none;
+        }
+
+        section {
+            margin-top: 40px;
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            margin: 0 0 20px 0;
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .roadmap-card {
+            position: relative;
+        }
+
+        .roadmap-card.completed {
+            border-color: rgba(34, 197, 94, 0.4);
+            background: linear-gradient(180deg, rgba(236, 253, 245, 0.9), #ffffff);
+        }
+
+        .roadmap-check {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            background: #22c55e;
+            color: white;
+            display: none;
+        }
+
+        .roadmap-card.completed .roadmap-check {
+            display: flex;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .form-wrap {
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-top: 24px;
+            display: none;
+        }
+
+        .form-wrap.active {
+            display: block;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 12px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fbfdff;
+        }
+
+        .success {
+            margin-top: 16px;
+            color: #16a34a;
+            font-weight: 600;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+            .page {
+                padding: 36px 18px 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header>
+            <button class="btn-secondary" id="backBtn">Back to Dashboard</button>
+            <h1>Build Your Startup</h1>
+            <p class="subtitle">Turn your idea into a real opportunity</p>
+        </header>
+
+        <section>
+            <h2>Phase 1: Build Your Startup Foundation</h2>
+            <div class="grid">
+                <div class="card">
+                    <span class="tag">Idea Validation</span>
+                    <p>Define your problem and target users</p>
+                    <button class="btn">Start</button>
+                </div>
+                <div class="card">
+                    <span class="tag">MVP Building</span>
+                    <p>Build a simple version of your idea</p>
+                    <button class="btn">Start</button>
+                </div>
+                <div class="card">
+                    <span class="tag">Business Basics</span>
+                    <p>Understand market and monetization</p>
+                    <button class="btn">Start</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Phase 2: Connect with Investors</h2>
+            <div class="grid">
+                <div class="card">
+                    <strong>Rahul Mehta</strong>
+                    <span class="tag">Angel Investor</span>
+                    <p>Focus: AI, EdTech, SaaS</p>
+                    <button class="btn request-btn" data-investor="Rahul Mehta">Request Connection</button>
+                </div>
+                <div class="card">
+                    <strong>Ananya Kapoor</strong>
+                    <span class="tag">VC</span>
+                    <p>Focus: HealthTech, SaaS</p>
+                    <button class="btn request-btn" data-investor="Ananya Kapoor">Request Connection</button>
+                </div>
+                <div class="card">
+                    <strong>Neel Rao</strong>
+                    <span class="tag">Angel Investor</span>
+                    <p>Focus: FinTech, Consumer Apps</p>
+                    <button class="btn request-btn" data-investor="Neel Rao">Request Connection</button>
+                </div>
+            </div>
+
+            <div class="form-wrap" id="requestForm">
+                <h2>Request Connection</h2>
+                <p class="subtitle" id="selectedInvestor">Investor: —</p>
+                <div style="margin-top: 16px;">
+                    <label for="ideaInput">Startup Idea</label>
+                    <textarea id="ideaInput" placeholder="Describe your startup idea"></textarea>
+                </div>
+                <div style="margin-top: 16px;">
+                    <label for="problemInput">Problem Statement</label>
+                    <textarea id="problemInput" placeholder="Describe the problem you are solving"></textarea>
+                </div>
+                <div style="margin-top: 16px;">
+                    <button class="btn" id="sendRequestBtn">Send Request</button>
+                </div>
+                <div class="success" id="successMsg">Your request has been sent successfully</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Startup Roadmap</h2>
+            <div class="grid" id="startupRoadmapGrid">
+                <div class="card roadmap-card" data-roadmap-step="validate">
+                    <div class="roadmap-check">✓</div>
+                    <span class="tag">Step 1</span>
+                    <strong>Validate Idea</strong>
+                    <p>Confirm problem, audience, and urgency.</p>
+                    <p class="subtitle">Unlock: Clear problem statement</p>
+                </div>
+                <div class="card roadmap-card" data-roadmap-step="mvp">
+                    <div class="roadmap-check">✓</div>
+                    <span class="tag">Step 2</span>
+                    <strong>Build MVP</strong>
+                    <p>Launch a simple, working version.</p>
+                    <p class="subtitle">Unlock: Working demo</p>
+                </div>
+                <div class="card roadmap-card" data-roadmap-step="beta">
+                    <div class="roadmap-check">✓</div>
+                    <span class="tag">Step 3</span>
+                    <strong>Run Beta</strong>
+                    <p>Collect feedback from real users.</p>
+                    <p class="subtitle">Unlock: 5+ user insights</p>
+                </div>
+                <div class="card roadmap-card" data-roadmap-step="traction">
+                    <div class="roadmap-check">✓</div>
+                    <span class="tag">Step 4</span>
+                    <strong>Show Traction</strong>
+                    <p>Prove value with usage or revenue.</p>
+                    <p class="subtitle">Unlock: Traction metrics</p>
+                </div>
+                <div class="card roadmap-card" data-roadmap-step="investor">
+                    <div class="roadmap-check">✓</div>
+                    <span class="tag">Step 5</span>
+                    <strong>Investor Ready</strong>
+                    <p>Prepare pitch and outreach list.</p>
+                    <p class="subtitle">Unlock: Pitch deck + targets</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const requestButtons = document.querySelectorAll('.request-btn');
+        const requestForm = document.getElementById('requestForm');
+        const selectedInvestor = document.getElementById('selectedInvestor');
+        const successMsg = document.getElementById('successMsg');
+        const backBtn = document.getElementById('backBtn');
+        const sendRequestBtn = document.getElementById('sendRequestBtn');
+
+        requestButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const name = btn.getAttribute('data-investor') || 'Investor';
+                selectedInvestor.textContent = `Investor: ${name}`;
+                requestForm.classList.add('active');
+                successMsg.style.display = 'none';
+                requestForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        sendRequestBtn.addEventListener('click', () => {
+            successMsg.style.display = 'block';
+        });
+
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+
+        const roadmapCards = document.querySelectorAll('.roadmap-card');
+        roadmapCards.forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('completed');
+            });
+        });
+    </script>
+</body>
+</html>
